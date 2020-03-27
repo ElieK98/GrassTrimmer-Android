@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorBlack"
     tools:context=".MainActivity">
 
 
@@ -69,6 +70,7 @@
         android:layout_height="wrap_content"
         android:checked="false"
         android:text="Trimmer"
+        android:textColor="#F3ECEC"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.896"
@@ -81,12 +83,13 @@
         android:layout_width="95dp"
         android:layout_height="62dp"
         android:text="Contents received from ESP32"
+        android:textColor="#F7F0F0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.136"
+        app:layout_constraintHorizontal_bias="0.107"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.819" />
+        app:layout_constraintVertical_bias="0.073" />
 
     <Switch
         android:id="@+id/switch2"
@@ -94,6 +97,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="36dp"
         android:text="Run/Stop"
+        android:textColor="#F5F2F2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.894"
@@ -110,6 +114,7 @@
         android:fontFamily="sans-serif-condensed-medium"
         android:text="Movement"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+        android:textColor="#F1EDED"
         android:textStyle="bold"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/ArrowUp"
@@ -128,7 +133,7 @@
 
         android:text="Current Speed"
         android:textAllCaps="false"
-        android:textColor="#0C0000"
+        android:textColor="#F5F0F0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.122"
@@ -141,7 +146,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Current Session"
-        android:textColor="#0C0101"
+        android:textColor="#F3EDED"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.122"
@@ -155,7 +160,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text="00:00:00 "
-        android:textColor="#FD090000"
+        android:textColor="#FDF5F0F0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.708"
@@ -167,7 +172,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:text=""
-        android:textColor="#0A0000"
+        android:textColor="#F7EFEF"
         app:layout_constraintBottom_toTopOf="@+id/currentsession"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.721"
