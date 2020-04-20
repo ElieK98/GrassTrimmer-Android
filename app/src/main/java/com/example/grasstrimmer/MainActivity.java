@@ -34,18 +34,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     MqttConnectOptions options;
     String topic = "MDP_Grass_Trimming_Robot";
     String subtopic="MDP_Grass_Trimming_app_esp";
-    String ServerURI="tcp://broker.hivemq.com:1883";
-    //String ServerURI="tcp://212.98.137.194:1883";
+    //String ServerURI="tcp://broker.hivemq.com:1883";
+    String ServerURI="tcp://212.98.137.194:1883";
 
     Switch TrimmerToggle;
     TextView subText;
     Vibrator vibrator;
     Ringtone myRingtone;
     Switch runstop;
+    Switch Automatic;
     ImageButton ArrowUp;
     ImageButton ArrowLeft;
     ImageButton ArrowRight;
     ImageButton ArrowDown;
+    ImageButton StopSign;
     TextView CurrentSpeedLabel;
     TextView CurrentSessionLabel;
     TextView CurrentSpeed;
@@ -67,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         CurrentSession=(TextView)findViewById(R.id.currentsession);
         CurrentSpeed=(TextView)findViewById(R.id.currentspeed);
+
+        Automatic=(Switch)findViewById(R.id.switch3);
+        Automatic.setOnClickListener(this);
+
+        StopSign=(ImageButton)findViewById(R.id.stopsign);
+        StopSign.setOnClickListener(this);
+        StopSign.setEnabled(false);
 
         ArrowUp=(ImageButton)findViewById(R.id.ArrowUp);
         ArrowUp.setOnClickListener(this);
@@ -101,8 +110,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         client = new MqttAndroidClient(this.getApplicationContext(),ServerURI , clientId);
 
         options = new MqttConnectOptions();
-        //options.setUserName("iotleb");
-        //options.setPassword("iotleb".toCharArray());
+        options.setUserName("iotleb");
+        options.setPassword("iotleb".toCharArray());
 
         //if not works check connect options
 
@@ -176,13 +185,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     };
 
-    public void Move(int M1,int M2, int M3, int M4,int T) throws JSONException {
+    public void Move(int M1,int M2, int M3, int M4,int T,int A) throws JSONException {
         JSONObject jo=new JSONObject();
         jo.put("Motor 1",M1);
         jo.put("Motor 2",M2);
         jo.put("Motor 3",M3);
         jo.put("Motor 4",M4);
         jo.put("Trimmer",T);
+        jo.put("Automatic",A);
         String reqPayload = jo.toString();
         MqttMessage reqMessage = new MqttMessage();
         reqMessage.setPayload(reqPayload.getBytes());
@@ -195,36 +205,44 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             e.printStackTrace();
         }
     }
+
     @Override
     public void onClick(View v){
         try {
+            if(v.getId()==R.id.stopsign){
+
+                    Move(0,0,0,0,0,0);
+
+            }
             if (v.getId() == R.id.ArrowUp) {
                 if (TrimmerToggle.isChecked()){
 
-                    Move(1, 0, 1, 0,1);
-                }else{ Move(1, 0, 1, 0,0);}
+                    Move(1, 0, 1, 0,1,0);
+                }else{ Move(1, 0, 1, 0,0,0);}
 
             }
             if (v.getId() == R.id.ArrowLeft) {
                 if (TrimmerToggle.isChecked()) {
 
-                    Move(0, 0, 1, 0, 1);
-                }else{ Move(0, 0, 1, 0, 0);}
+                    Move(0, 0, 1, 0, 1,0);
+                }else{ Move(0, 0, 1, 0, 0,0);}
             }
             if (v.getId() == R.id.ArrowRight) {
                 if (TrimmerToggle.isChecked()) {
 
-                    Move(1, 0, 0, 0, 1);
-                }else{  Move(1, 0, 0, 0, 0);}
+                    Move(1, 0, 0, 0, 1,0);
+                }else{  Move(1, 0, 0, 0, 0,0);}
             }
             if (v.getId() == R.id.ArrowDown) {
                 if (TrimmerToggle.isChecked()) {
 
-                    Move(0, 1, 0, 1, 1);
-                }else{ Move(0, 1, 0, 1, 0);}
+                    Move(0, 1, 0, 1, 1,0);
+                }else{ Move(0, 1, 0, 1, 0,0);}
             }
 // Move(0,1,0,1);
-
+            if(Automatic.isChecked()){
+                Move(0,0,0,0,1,1);
+            }
             if (runstop.isChecked()) {
                 StartTime = SystemClock.uptimeMillis();
                 handler.postDelayed(runnable, 0);
