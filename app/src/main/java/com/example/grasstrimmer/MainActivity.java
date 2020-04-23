@@ -9,6 +9,7 @@ import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -28,7 +29,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener{ //OnTouchListener
 
     MqttAndroidClient client;
     MqttConnectOptions options;
@@ -102,7 +103,69 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         TrimmerToggle.setOnClickListener(this);
 
         runstop=(Switch)findViewById(R.id.switch2);
-        runstop.setOnClickListener(this);
+        runstop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    StartTime = SystemClock.uptimeMillis();
+                    handler.postDelayed(runnable, 0);
+                    ArrowUp.setEnabled(true);
+                    ArrowUp.setAlpha(1.0f);
+
+                    ArrowLeft.setEnabled(true);
+                    ArrowLeft.setAlpha(1.0f);
+
+                    ArrowRight.setEnabled(true);
+                    ArrowRight.setAlpha(1.0f);
+
+                    ArrowDown.setEnabled(true);
+                    ArrowDown.setAlpha(1.0f);
+
+                    StopSign.setEnabled(true);
+                    StopSign.setAlpha(1.0f);
+
+                }
+                else{
+                    TimeBuff += MillisecondTime;
+
+                    handler.removeCallbacks(runnable);
+                    ArrowUp.setAlpha(0.5f);
+                    ArrowLeft.setAlpha(0.5f);
+                    ArrowRight.setAlpha(0.5f);
+                    ArrowDown.setAlpha(0.5f);
+
+                    ArrowUp.setEnabled(false);
+                    ArrowRight.setEnabled(false);
+                    ArrowLeft.setEnabled(false);
+                    ArrowDown.setEnabled(false);
+                    MillisecondTime = 0L ;
+                    StartTime = 0L ;
+                    TimeBuff = 0L ;
+                    UpdateTime = 0L ;
+                    Seconds = 0 ;
+                    Minutes = 0 ;
+                    MilliSeconds = 0 ;
+
+                    CurrentSession.setText("00:00:00");
+                }
+            }
+        });
+
+        Automatic.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                try{
+                if(b){
+
+                        Move(0, 0, 0, 0, 1, 1);
+
+                }if(!b){Move(0,0,0,0,0,0);}}catch(JSONException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        );
 
         handler=new Handler();
 
@@ -207,11 +270,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v){
+    public void onClick(View v){ // onTouchDown
         try {
             if(v.getId()==R.id.stopsign){
 
-                    Move(0,0,0,0,0,0);
+                Move(0,0,0,0,0,0);
 
             }
             if (v.getId() == R.id.ArrowUp) {
@@ -224,14 +287,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (v.getId() == R.id.ArrowLeft) {
                 if (TrimmerToggle.isChecked()) {
 
-                    Move(0, 0, 1, 0, 1,0);
-                }else{ Move(0, 0, 1, 0, 0,0);}
+                    Move(0, 1, 1, 0, 1,0);
+                }else{ Move(0, 1, 1, 0, 0,0);}
             }
             if (v.getId() == R.id.ArrowRight) {
                 if (TrimmerToggle.isChecked()) {
 
-                    Move(1, 0, 0, 0, 1,0);
-                }else{  Move(1, 0, 0, 0, 0,0);}
+                    Move(1, 0, 0, 1, 1,0);
+                }else{  Move(1, 0, 0, 1, 0,0);}
             }
             if (v.getId() == R.id.ArrowDown) {
                 if (TrimmerToggle.isChecked()) {
@@ -240,52 +303,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }else{ Move(0, 1, 0, 1, 0,0);}
             }
 // Move(0,1,0,1);
-            if(Automatic.isChecked()){
+            /**if(Automatic.isChecked()){
                 Move(0,0,0,0,1,1);
-            }
-            if (runstop.isChecked()) {
-                StartTime = SystemClock.uptimeMillis();
-                handler.postDelayed(runnable, 0);
-                ArrowUp.setEnabled(true);
-                ArrowUp.setAlpha(1.0f);
+            }**/
 
-                ArrowLeft.setEnabled(true);
-                ArrowLeft.setAlpha(1.0f);
-
-                ArrowRight.setEnabled(true);
-                ArrowRight.setAlpha(1.0f);
-
-                ArrowDown.setEnabled(true);
-                ArrowDown.setAlpha(1.0f);
-
-            }
-            else{
-                TimeBuff += MillisecondTime;
-
-                handler.removeCallbacks(runnable);
-                ArrowUp.setAlpha(0.5f);
-                ArrowLeft.setAlpha(0.5f);
-                ArrowRight.setAlpha(0.5f);
-                ArrowDown.setAlpha(0.5f);
-
-                ArrowUp.setEnabled(false);
-                ArrowRight.setEnabled(false);
-                ArrowLeft.setEnabled(false);
-                ArrowDown.setEnabled(false);
-                MillisecondTime = 0L ;
-                StartTime = 0L ;
-                TimeBuff = 0L ;
-                UpdateTime = 0L ;
-                Seconds = 0 ;
-                Minutes = 0 ;
-                MilliSeconds = 0 ;
-
-                CurrentSession.setText("00:00:00");
-            }
         }catch (JSONException e){
             e.printStackTrace();
         }
     }
+
+//    public boolean onTOuch
+    // if ACTION_DOWN
+    // onTouchDown
+    //else if ACTION_UP
+    // onTouchUp
 
     private void setSubscription(){
         try{
