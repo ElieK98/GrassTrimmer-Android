@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
@@ -29,7 +30,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{ //OnTouchListener
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener{ //OnTouchListener
 
     MqttAndroidClient client;
     MqttConnectOptions options;
@@ -48,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton ArrowLeft;
     ImageButton ArrowRight;
     ImageButton ArrowDown;
-    ImageButton StopSign;
     TextView CurrentSpeedLabel;
     TextView CurrentSessionLabel;
     TextView CurrentSpeed;
@@ -72,35 +72,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         CurrentSpeed=(TextView)findViewById(R.id.currentspeed);
 
         Automatic=(Switch)findViewById(R.id.switch3);
-        Automatic.setOnClickListener(this);
+        Automatic.setOnTouchListener(this);
 
-        StopSign=(ImageButton)findViewById(R.id.stopsign);
-        StopSign.setOnClickListener(this);
-        StopSign.setEnabled(false);
 
         ArrowUp=(ImageButton)findViewById(R.id.ArrowUp);
-        ArrowUp.setOnClickListener(this);
+        ArrowUp.setOnTouchListener(this);
         ArrowUp.setEnabled(false);
 
 
         ArrowRight=(ImageButton)findViewById(R.id.ArrowRight);
-        ArrowRight.setOnClickListener(this);
+        ArrowRight.setOnTouchListener(this);
         ArrowRight.setEnabled(false);
 
 
         ArrowLeft=(ImageButton)findViewById(R.id.ArrowLeft);
-        ArrowLeft.setOnClickListener(this);
+        ArrowLeft.setOnTouchListener(this);
         ArrowLeft.setEnabled(false);
 
 
         ArrowDown=(ImageButton)findViewById(R.id.ArrowDown);
-        ArrowDown.setOnClickListener(this);
+        ArrowDown.setOnTouchListener(this);
         ArrowDown.setEnabled(false);
 
 
 
         TrimmerToggle=(Switch)findViewById(R.id.switch1);
-        TrimmerToggle.setOnClickListener(this);
+        TrimmerToggle.setOnTouchListener(this);
 
         runstop=(Switch)findViewById(R.id.switch2);
         runstop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -121,8 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     ArrowDown.setEnabled(true);
                     ArrowDown.setAlpha(1.0f);
 
-                    StopSign.setEnabled(true);
-                    StopSign.setAlpha(1.0f);
+
 
                 }
                 else{
@@ -269,54 +265,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onClick(View v){ // onTouchDown
-        try {
-            if(v.getId()==R.id.stopsign){
 
-                Move(0,0,0,0,0,0);
 
-            }
-            if (v.getId() == R.id.ArrowUp) {
-                if (TrimmerToggle.isChecked()){
-
-                    Move(1, 0, 1, 0,1,0);
-                }else{ Move(1, 0, 1, 0,0,0);}
-
-            }
-            if (v.getId() == R.id.ArrowLeft) {
-                if (TrimmerToggle.isChecked()) {
-
-                    Move(0, 1, 1, 0, 1,0);
-                }else{ Move(0, 1, 1, 0, 0,0);}
-            }
-            if (v.getId() == R.id.ArrowRight) {
-                if (TrimmerToggle.isChecked()) {
-
-                    Move(1, 0, 0, 1, 1,0);
-                }else{  Move(1, 0, 0, 1, 0,0);}
-            }
-            if (v.getId() == R.id.ArrowDown) {
-                if (TrimmerToggle.isChecked()) {
-
-                    Move(0, 1, 0, 1, 1,0);
-                }else{ Move(0, 1, 0, 1, 0,0);}
-            }
-// Move(0,1,0,1);
-            /**if(Automatic.isChecked()){
-                Move(0,0,0,0,1,1);
-            }**/
-
-        }catch (JSONException e){
+    public void onTouchUp(){
+        try{
+        if(TrimmerToggle.isChecked()){
+            Move(0,0,0,0,1,0);
+        }else{
+            Move(0,0,0,0,0,0);
+        }
+        }catch(JSONException e){
             e.printStackTrace();
         }
     }
 
-//    public boolean onTOuch
-    // if ACTION_DOWN
-    // onTouchDown
-    //else if ACTION_UP
-    // onTouchUp
+
+
 
     private void setSubscription(){
         try{
@@ -326,7 +290,67 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        try {
+
+                if(view.getId()==R.id.ArrowUp) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        if (TrimmerToggle.isChecked()) {
+
+                            Move(1, 0, 1, 0, 1, 0);
+                        } else {
+                            Move(1, 0, 1, 0, 0, 0);
+                        }
+                    } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        onTouchUp();
+                    }
+                }
+
+            if(view.getId()==R.id.ArrowLeft) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (TrimmerToggle.isChecked()) {
+
+                        Move(0, 1, 1, 0, 1, 0);
+                    } else {
+                        Move(0, 1, 1, 0, 0, 0);
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    onTouchUp();
+                }
+            }
+            if(view.getId()==R.id.ArrowRight) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (TrimmerToggle.isChecked()) {
+
+                        Move(1, 0, 0, 1, 1, 0);
+                    } else {
+                        Move(1, 0, 0, 1, 0, 0);
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    onTouchUp();
+                }
+            }
+            if(view.getId()==R.id.ArrowDown) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                    if (TrimmerToggle.isChecked()) {
+
+                        Move(0, 1, 0, 1, 1, 0);
+                    } else {
+                        Move(0, 1, 0, 1, 0, 0);
+                    }
+                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    onTouchUp();
+                }
+            }
 
 
+        }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
 
+
+        return false;
+    }
 }
