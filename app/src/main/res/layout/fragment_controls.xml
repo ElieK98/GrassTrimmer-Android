@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:layout_marginHorizontal="30dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Run / Stop"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"/>
+
+            <Switch
+                android:id="@+id/runStopSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trimmer"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"/>
+
+            <Switch
+                android:id="@+id/trimmerSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Automatic Mode"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"/>
+
+            <Switch
+                android:id="@+id/automaticSwitch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/movementTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-black"
+        android:textSize="25dp"
+        android:text="Movement"
+        android:textColor="@color/colorWhite"
+        android:layout_centerHorizontal="true"
+        android:layout_alignTop="@+id/verticalMovementLayout"
+        android:layout_marginTop="-60dp"/>
+
+    <RelativeLayout
+        android:layout_width="220dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true">
+
+        <ImageButton
+            android:id="@+id/arrowLeft"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/arrowleft1"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            />
+
+        <ImageButton
+            android:id="@+id/arrowRight"
+            android:layout_width="60dp"
+            android:layout_height="match_parent"
+            android:src="@drawable/arrowright1"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:layout_alignParentEnd="true"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/verticalMovementLayout"
+        android:layout_width="60dp"
+        android:layout_height="220dp"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="200dp">
+
+        <ImageButton
+            android:id="@+id/arrowUp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:src="@drawable/arrowup1"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            />
+
+        <ImageButton
+            android:id="@+id/arrowDown"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:src="@drawable/arrowdown1"
+            android:scaleType="fitCenter"
+            android:background="@null"
+            android:layout_alignParentBottom="true"
+            />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:layout_marginHorizontal="30dp"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Speed"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/speedTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0 m/s"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current Session"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:id="@+id/sessionTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="00:00:00"
+                android:textSize="20dp"
+                android:textColor="@android:color/white"
+                android:layout_alignParentRight="true"/>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>

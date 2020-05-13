@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1044409782499",
+    "firebase_url": "https://grasstrimmer.firebaseio.com",
+    "project_id": "grasstrimmer",
+    "storage_bucket": "grasstrimmer.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1044409782499:android:4f6df207eed1c26a6eb5d6",
+        "android_client_info": {
+          "package_name": "com.example.grasstrimmer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1044409782499-ts6rgr872ffrf6ioee1rotf3lmg91aa6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1Dmhgq8U2JWTv77K4oj7d8jPGZiDgjng"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1044409782499-ts6rgr872ffrf6ioee1rotf3lmg91aa6.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1044409782499-q1km4e7p8n67sm4p7dqsq7vtctuc1vns.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mdp.GrassTrimmer"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

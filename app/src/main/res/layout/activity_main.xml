@@ -1,189 +1,57 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorBlack"
-    tools:context=".MainActivity">
+    android:background="@color/colorBlack">
 
-    <ImageButton
-        android:id="@+id/ArrowUp"
-        android:layout_width="88dp"
-        android:layout_height="92dp"
-        android:alpha="0.5"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-        android:background="@drawable/arrowup1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.427" />
+        <ImageView
+            android:id="@+id/profileImageView"
+            android:layout_width="10dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentRight="true"
 
-    <ImageButton
-        android:id="@+id/ArrowLeft"
-        android:layout_width="88dp"
-        android:layout_height="92dp"
-        android:alpha="0.5"
+            android:layout_height="wrap_content"
 
-        android:background="@drawable/arrowleft1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.08"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/NameTextView"
+            ></TextView>
 
-    <ImageButton
-        android:id="@+id/ArrowRight"
-        android:layout_width="88dp"
-        android:layout_height="92dp"
-        android:alpha="0.5"
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/colorPrimaryGreen"
+            app:tabMode="fixed"
+            app:tabSelectedTextColor="@color/colorPrimaryGreen"
+            app:tabTextColor="@android:color/white"
 
-        android:background="@drawable/arrowright1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.897"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.6" />
+            />
 
-    <ImageButton
-        android:id="@+id/ArrowDown"
-        android:layout_width="88dp"
-        android:layout_height="92dp"
-        android:alpha="0.5"
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tabLayout"
+            android:background="@color/colorBlack">
 
-        android:background="@drawable/arrowdown1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.777" />
+            <FrameLayout
+                android:id="@+id/contentViewPager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="false"
-        android:text="Trimmer"
-        android:textColor="#F3ECEC"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.896"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.119" />
+        </androidx.viewpager.widget.ViewPager>
 
-    <TextView
-        android:id="@+id/SubscribeText"
-        android:layout_width="95dp"
-        android:layout_height="62dp"
-        android:text="Contents received from ESP32"
-        android:textColor="#F7F0F0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.107"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.073" />
+    </RelativeLayout>
 
-    <Switch
-        android:id="@+id/switch2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="36dp"
-        android:text="Run/Stop"
-        android:textColor="#F5F2F2"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.894"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.002" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        android:layout_marginTop="180dp"
-        android:fontFamily="sans-serif-condensed-medium"
-        android:text="Movement"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:textColor="#F1EDED"
-        android:textStyle="bold"
-        android:visibility="visible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:alpha="1"
-        android:autoSizeTextType="uniform"
-
-        android:text="Current Speed"
-        android:textAllCaps="false"
-        android:textColor="#F5F0F0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.904" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Current Session"
-        android:textColor="#F3EDED"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.122"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.964" />
-
-    <TextView
-        android:id="@+id/currentsession"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="00:00:00 "
-        android:textColor="#FDF5F0F0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.708"
-        app:layout_constraintStart_toEndOf="@+id/textView3" />
-
-    <TextView
-        android:id="@+id/currentspeed"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text=""
-        android:textColor="#F7EFEF"
-        app:layout_constraintBottom_toTopOf="@+id/currentsession"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.721"
-        app:layout_constraintStart_toEndOf="@+id/textView2" />
-
-    <Switch
-        android:id="@+id/switch3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="Automatic Mode"
-        android:textColor="#FCFAFA"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.875"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/switch1" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>
