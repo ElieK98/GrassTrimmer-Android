@@ -1,7 +1,9 @@
 package com.example.grasstrimmer;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -11,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.grasstrimmer.Model.Helpers;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -29,7 +32,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class SplashScreen extends AppCompatActivity {
 
     SignInButton signInButton;
-
+    TextView welcomeTextView;
     private static final String TAG="GoogleActivity";
     private static final int RC_SIGN_IN=100;
     //declare Auth
@@ -37,7 +40,8 @@ public class SplashScreen extends AppCompatActivity {
 
 
 
-    public static int TIME_OUT=5000;
+    public static int TIME_OUT=2000;
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,11 +59,14 @@ public class SplashScreen extends AppCompatActivity {
 //            }
 //        }, TIME_OUT);
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
         final GoogleSignInClient googleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
         mAuth=FirebaseAuth.getInstance();
         signInButton = findViewById(R.id.signInButton);
+        welcomeTextView = findViewById(R.id.weclomeTextView);
+
         TextView textView = (TextView) signInButton.getChildAt(0);
         textView.setText("Sign In With Google");
         signInButton.setOnClickListener(new View.OnClickListener() {
@@ -69,6 +76,25 @@ public class SplashScreen extends AppCompatActivity {
                 startActivityForResult(signInIntent, 100);
             }
         });
+
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null  && !Helpers.getFromPreferences("displayName", getApplicationContext()).equals("")) {
+            signInButton.setVisibility(SignInButton.INVISIBLE);
+            welcomeTextView.setVisibility(TextView.VISIBLE);
+            welcomeTextView.setText(String.format("Welcome Back %s", Helpers.getFromPreferences("displayName", getApplicationContext())));
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }, TIME_OUT);
+        } else {
+            signInButton.setVisibility(SignInButton.VISIBLE);
+            welcomeTextView.setVisibility(TextView.INVISIBLE);
+        }
     }
     @Override
     public void onStart() {
@@ -90,9 +116,7 @@ public class SplashScreen extends AppCompatActivity {
     private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
         try {
             GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-            startActivity(intent);
-            finish();
+            firebaseAuthWithGoogle(account.getIdToken());
         } catch (ApiException e) {
             e.printStackTrace();
         }
@@ -109,7 +133,15 @@ public class SplashScreen extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Log.d(TAG,"signInWithCredential:success");
                     FirebaseUser user=mAuth.getCurrentUser();
-                    Toast.makeText(SplashScreen.this, "Authentication with Firebase Successful", Toast.LENGTH_LONG).show();
+                    final GoogleSignInAccount account= GoogleSignIn.getLastSignedInAccount(getApplicationContext());
+                    Helpers.addToPreferences("userID",account.getId(), getApplicationContext() );
+                    Helpers.addToPreferences("displayName", user.getDisplayName(), getApplicationContext());
+                    Helpers.addToPreferences("email", user.getEmail(), getApplicationContext());
+
+                    Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+//                    Toast.makeText(SplashScreen.this, "Authentication with Firebase Successful", Toast.LENGTH_LONG).show();
                     //updateUI(user);
                 }else{
                     Log.w(TAG,"signInWithCredential:failure",task.getException());

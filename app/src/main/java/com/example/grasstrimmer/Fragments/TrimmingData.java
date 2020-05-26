@@ -1,66 +1,27 @@
 package com.example.grasstrimmer.Fragments;
 
 public class TrimmingData {
-    String personName;
-    String personFamilyName;
-    String personEmail;
-    String personId;
     String date;
-    String Minutes;
-    String name;
+    Long sessionLength;
 
-    public TrimmingData(String personId,String personName,String personFamilyName,String personEmail,String date, String Minutes){
-        this.personName=personName;
-        this.personFamilyName=personFamilyName;
-        this.personId=personId;
-        this.personEmail=personEmail;
-        this.date=date;
-        this.Minutes=Minutes;
-
-
-    }
-    public String getDate(){
-        return date;
-    }
-    public String getMinutes(){
-        return Minutes;
-    }
-    public String getPersonName(){ return personName;}
-
-    public String getPersonEmail() {
-        return personEmail;
+    public TrimmingData(String date, Long sessionLength) {
+        this.date = date;
+        this.sessionLength = sessionLength;
     }
 
-    public String getPersonFamilyName() {
-        return personFamilyName;
+    String getDate() {
+        return this.date;
     }
 
-    public void setPersonEmail(String personEmail) {
-        this.personEmail = personEmail;
+    Long getSessionLength() {
+        return this.sessionLength;
     }
 
-    public void setPersonName(String personName) {
-        this.personName = personName;
+    void setDate(String date) {
+        this.date = date;
     }
 
-    public void setPersonFamilyName(String personFamilyName) {
-        this.personFamilyName = personFamilyName;
+    void setSessionLength(Long sessionLength) {
+        this.sessionLength = sessionLength;
     }
-
-    public void setPersonId(String personId) {
-        this.personId = personId;
-    }
-
-    public String getPersonId() {
-        return personId;
-    }
-
-
-    public void setDate(String date){
-        this.date=date;
-    }
-    public void setMinutes(String Minutes){
-        this.Minutes=Minutes;
-    }
-
 }

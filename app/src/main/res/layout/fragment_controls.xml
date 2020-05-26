@@ -162,7 +162,7 @@
                 android:id="@+id/speedTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="0 m/s"
+                android:text="0 rpm"
                 android:textSize="20dp"
                 android:textColor="@android:color/white"
                 android:layout_alignParentRight="true"/>

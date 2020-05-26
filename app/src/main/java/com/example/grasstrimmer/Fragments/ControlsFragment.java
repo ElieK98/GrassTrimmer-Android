@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.grasstrimmer.Constants;
+import com.example.grasstrimmer.Model.Helpers;
 import com.example.grasstrimmer.Model.Message;
 import com.example.grasstrimmer.R;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -45,11 +46,12 @@ import org.json.JSONException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
 public class ControlsFragment extends Fragment implements View.OnTouchListener {
-    FirebaseDatabase rootNode;
+
     DatabaseReference reference;
 
     Vibrator vibrator;
@@ -85,14 +87,15 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
     MqttConnectOptions options;
 
     String timeTrimmed;
+    HashMap<String, Object> dataMap;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_controls, container, false);
 
-        rootNode=FirebaseDatabase.getInstance();
-        reference=rootNode.getReference("Android Data");
+        reference = FirebaseDatabase.getInstance().getReference("ESP1");
+
 
         final GoogleSignInAccount account= GoogleSignIn.getLastSignedInAccount(getActivity());
 
@@ -110,7 +113,10 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
                     startTime = SystemClock.uptimeMillis();
                     handler.postDelayed(runnable, 0);
                     toggleButtons(true);
+                    dataMap = new HashMap<>();
                 } else {
+                    dataMap.put("sessionLength", (minutes * 60) + seconds);
+                    Integer sessionCount = Helpers.getIntFromPreferences(date + " - sessionCounter", getContext());
                     timeBuff += millisecondsTime;
                     millisecondsTime = 0L;
                     startTime = 0L;
@@ -120,10 +126,18 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
                     seconds = 0;
                     minutes = 0;
                     handler.removeCallbacks(runnable);
+
+                    if (trimmerSwitch.isChecked()) {
+                        Date trimEndDate = Calendar.getInstance().getTime();
+                        @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                        final String trimEndString = df.format(trimEndDate);
+                        dataMap.put(trimEndString, "trimEnd");
+                    }
+
                     if(account!=null) {
-                        timeTrimmed = (String) currentSessionText.getText();
-                        TrimmingData TD = new TrimmingData(account.getId(),account.getDisplayName(),account.getFamilyName(),account.getEmail(),date,timeTrimmed );
-                        reference.setValue(TD);
+                        reference.child(account.getId()).child(date).child("Session " + sessionCount).setValue(dataMap);
+                        Helpers.addIntToPreferences(date + " - sessionCounter", sessionCount + 1, getContext());
+                        dataMap = null;
                     }
                     currentSessionText.setText("00:00:00");
                     toggleButtons(false);
@@ -131,6 +145,22 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
             }
         });
         trimmerSwitch = view.findViewById(R.id.trimmerSwitch);
+        trimmerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (isChecked) {
+                    Date trimStartDate = Calendar.getInstance().getTime();
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    final String trimStartString = df.format(trimStartDate);
+                    dataMap.put(trimStartString, "trimStart");
+                } else {
+                    Date trimEndDate = Calendar.getInstance().getTime();
+                    @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+                    final String trimEndString = df.format(trimEndDate);
+                    dataMap.put(trimEndString, "trimEnd");
+                }
+            }
+        });
         automaticSwitch = view.findViewById(R.id.automaticSwitch);
         automaticSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -202,6 +232,7 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
                     message = new Message(1,0,1,0,1,0);
                 } else {
                     message = new Message(1,0,1,0,0,0);
+
                 }
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
                 onTouchUp();
@@ -302,12 +333,46 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
 
             }
 
+            @SuppressLint("SetTextI18n")
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
+/*
+
+                 // {"distance":6,"vitesse":0}
+                String msg=message.getPayload().toString();
+
+                JSONObject jsonObject=(JSONObject) new JSONTokener(msg).nextValue();
+
+
+
+
+          //      InfoESP infoESP=gson.fromJson(msg,InfoESP.class);
+            //    JSONObject object=new JSONObject(msg);
+
+
+                int distance=jsonObject.getInt("distance");
+                int speed=jsonObject.getInt("vitesse");
+
+
+
+                    Toast.makeText(getContext(), "WARNING! Obstacle at " + distance + " cm", Toast.LENGTH_LONG).show();
+                    VibrationEffect vibe = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE);
+                    vibrator.vibrate(vibe);
+                    myRingtone.play();
+
+
+                currentSpeedText.setText(speed);
+
+ */
+
+
+
+
                 Toast.makeText(getContext(), new String(message.getPayload()), Toast.LENGTH_LONG).show();
                 VibrationEffect vibe = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE);
                 vibrator.vibrate(vibe);
                 myRingtone.play();
+
             }
 
             @Override
