@@ -1,14 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/sessionLength"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/timer"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:tint="@color/colorAccent"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Session Length"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:id="@+id/trimTime"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/lawn_mower"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:tint="@color/colorAccent"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Trim Time"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:id="@+id/averageSpeed"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/speed"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:tint="@color/colorAccent"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Average Speed"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:id="@+id/averageDistance"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ruler"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:tint="@color/colorAccent"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Average Distance"
+            android:gravity="center_vertical"
+            android:layout_marginStart="10dp"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/colorPrimary"/>
 
     <com.github.mikephil.charting.charts.BarChart
+        android:id="@+id/barChart"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/barChart"/>
+        tools:layout_editor_absoluteX="-1dp"
+        tools:layout_editor_absoluteY="190dp" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

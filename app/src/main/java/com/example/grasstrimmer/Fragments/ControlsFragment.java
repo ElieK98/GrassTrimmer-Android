@@ -42,11 +42,15 @@ import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static android.content.Context.VIBRATOR_SERVICE;
 
@@ -80,7 +84,7 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
 
     long millisecondsTime, startTime, timeBuff, updateTime=0L;
     Handler handler;
-    int seconds,minutes,milliseconds;
+    int seconds,minutes,milliseconds, sessionLength, averageSpeed, trimTimeTotal;
 
     Message message;
     MqttAndroidClient client;
@@ -88,6 +92,12 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
 
     String timeTrimmed;
     HashMap<String, Object> dataMap;
+    ArrayList<Integer>  speedList;
+    Date trimStartDate;
+    Date trimEndDate;
+
+    Long startTrim;
+    Long endTrim;
 
     @Nullable
     @Override
@@ -98,6 +108,8 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
 
 
         final GoogleSignInAccount account= GoogleSignIn.getLastSignedInAccount(getActivity());
+
+        trimTimeTotal=0;
 
 
         Date c= Calendar.getInstance().getTime();
@@ -114,8 +126,14 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
                     handler.postDelayed(runnable, 0);
                     toggleButtons(true);
                     dataMap = new HashMap<>();
+                    speedList = new ArrayList<>();
                 } else {
-                    dataMap.put("sessionLength", (minutes * 60) + seconds);
+                    sessionLength=(minutes * 60) + seconds;
+                    averageSpeed=calculateAverage(speedList);
+                    dataMap.put("averageSpeed",averageSpeed);
+                    dataMap.put("averageDistance",averageSpeed*sessionLength);
+                    dataMap.put("sessionLength", sessionLength);
+                    dataMap.put("trimTimeTotal",trimTimeTotal);
                     Integer sessionCount = Helpers.getIntFromPreferences(date + " - sessionCounter", getContext());
                     timeBuff += millisecondsTime;
                     millisecondsTime = 0L;
@@ -135,29 +153,50 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
                     }
 
                     if(account!=null) {
+                        /** upload data to firebase**/
                         reference.child(account.getId()).child(date).child("Session " + sessionCount).setValue(dataMap);
                         Helpers.addIntToPreferences(date + " - sessionCounter", sessionCount + 1, getContext());
                         dataMap = null;
+
+
+
                     }
+                    speedList=null;
                     currentSessionText.setText("00:00:00");
                     toggleButtons(false);
                 }
             }
         });
+
         trimmerSwitch = view.findViewById(R.id.trimmerSwitch);
         trimmerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (isChecked) {
-                    Date trimStartDate = Calendar.getInstance().getTime();
+                    message = new Message(0, 0, 0, 0, 1, 0);
+                    trimStartDate = Calendar.getInstance().getTime();
+
+                    startTrim=new java.util.Date().getTime();
+
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                     final String trimStartString = df.format(trimStartDate);
                     dataMap.put(trimStartString, "trimStart");
                 } else {
-                    Date trimEndDate = Calendar.getInstance().getTime();
+                    message = new Message(0, 0, 0, 0, 0, 0);
+                    trimEndDate = Calendar.getInstance().getTime();
                     @SuppressLint("SimpleDateFormat") SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                     final String trimEndString = df.format(trimEndDate);
                     dataMap.put(trimEndString, "trimEnd");
+
+                    endTrim=new java.util.Date().getTime();
+
+                    Long diffInMillies=Math.abs(startTrim-endTrim);
+                    long diff= TimeUnit.SECONDS.convert(diffInMillies,TimeUnit.MILLISECONDS);
+
+                    trimTimeTotal+=diff;
+
+
+
                 }
             }
         });
@@ -276,11 +315,9 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
     }
 
     public void onTouchUp() {
-        if (trimmerSwitch.isChecked()) {
-            message = new Message(0,0,0,0,1,0);
-        } else {
+
             message = new Message(0,0,0,0,0,0);
-        }
+
     }
 
     public Runnable runnable = new Runnable() {
@@ -333,37 +370,37 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
 
             }
 
+
             @SuppressLint("SetTextI18n")
             @Override
             public void messageArrived(String topic, MqttMessage message) throws Exception {
-/*
 
-                 // {"distance":6,"vitesse":0}
-                String msg=message.getPayload().toString();
-
-                JSONObject jsonObject=(JSONObject) new JSONTokener(msg).nextValue();
-
-
-
-
-          //      InfoESP infoESP=gson.fromJson(msg,InfoESP.class);
-            //    JSONObject object=new JSONObject(msg);
-
+                byte[] bytes=message.getPayload();
+                String msg=new String(bytes);
+                JSONObject jsonObject=new JSONObject(msg);
 
                 int distance=jsonObject.getInt("distance");
                 int speed=jsonObject.getInt("vitesse");
 
-
-
+                if (!Integer.toString(distance).equals("0")) {
                     Toast.makeText(getContext(), "WARNING! Obstacle at " + distance + " cm", Toast.LENGTH_LONG).show();
                     VibrationEffect vibe = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE);
                     vibrator.vibrate(vibe);
                     myRingtone.play();
+                }
 
 
-                currentSpeedText.setText(speed);
+                if(speedList.size()==100){
+                    speedList.add(speed);
+                    speedList.remove(0);
+                }else{
+                    speedList.add(speed);
 
- */
+                }
+
+                currentSpeedText.setText(Integer.toString(speed) + " Km/h");
+
+ /*
 
 
 
@@ -372,7 +409,7 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
                 VibrationEffect vibe = VibrationEffect.createOneShot(300, VibrationEffect.DEFAULT_AMPLITUDE);
                 vibrator.vibrate(vibe);
                 myRingtone.play();
-
+*/
             }
 
             @Override
@@ -398,5 +435,17 @@ public class ControlsFragment extends Fragment implements View.OnTouchListener {
         try {
             client.subscribe(Constants.subtopic,0);
         } catch(MqttException e) { e.printStackTrace(); }
+    }
+
+    private int calculateAverage(List<Integer> array){
+        int sum=0;
+        if(!array.isEmpty()){
+            for(Integer elem : array){
+                sum+=elem;
+            }
+            return sum/array.size();
+        }
+
+        return sum;
     }
 }

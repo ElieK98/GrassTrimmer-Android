@@ -12,17 +12,6 @@ public class Message {
     int trimmer;
     int automatic;
 
-//    Forward(1, 0, 1, 0, 0, 0),
-//    Left(0, 1, 1, 0, 0, 0),
-//    Right(1, 0, 0, 1, 0, 0),
-//    Backward(0, 1, 0, 1, 0, 0),
-//    ForwardWithTrimmer(1, 0, 1, 0, 1, 0),
-//    LeftWithTrimmer(0, 1, 1, 0, 1, 0),
-//    RightWithTrimmer(1, 0, 0, 1, 1, 0),
-//    BackwardWithTrimmer(0, 1, 0, 1, 1, 0),
-//    Trimmer(0, 0, 0, 0, 1, 0),
-//    OnAutomatic(0, 0, 0, 0, 1, 1),
-//    Stop(0, 0, 0, 0, 0, 0);
 
     public Message(int motor1, int motor2, int motor3, int motor4, int trimmer, int automatic){
         this.motor1 = motor1;
